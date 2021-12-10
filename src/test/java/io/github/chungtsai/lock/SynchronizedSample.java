@@ -3,7 +3,7 @@ package io.github.chungtsai.lock;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SynchronizedSample {
+public class SynchronizedSample implements IntValue {
 
 	private int value = 0;
 

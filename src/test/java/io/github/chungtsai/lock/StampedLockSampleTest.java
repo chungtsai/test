@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 public class StampedLockSampleTest {
 
 	@Test
-	void testLock() {
-		StampedLockSample common = new StampedLockSample();
+	void testReadEqWriteLock() {
+		IntValue common = new StampedLockSample();
 		TestCmdService cmdService = TestCmdService.create();
 
 		for (int i = 0; i < 1000; i++) {

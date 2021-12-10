@@ -5,7 +5,7 @@ import java.util.concurrent.locks.StampedLock;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StampedLockSample {
+public class StampedLockSample implements IntValue {
 
 	private int value = 0;
 	StampedLock lock = new StampedLock();
