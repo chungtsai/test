@@ -12,20 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 public class ReadWriteSampleTest {
 
 	@Test
-	void testLock() {
-		
-		synchronized (log) {
-			
-		}
-		ReadWriteSample common = new ReadWriteSample();
-		TestCmdService cmdService = TestCmdService.create();
+	void testReadEqWriteLock() {
 
-		for (int i = 0; i < 1000; i++) {
-			cmdService.addCache(new CmdRunnable("add_" + i, () -> common.add(), 0, 0));
-			cmdService.addCache(new CmdRunnable("get_" + i, () -> common.getValue(), 0, 0));
-
-		}
-		cmdService.startJoin();
+		IntValue common = new ReadWriteSample();
+		TestCmdService cmdService = TestCmdService.create();//
+		cmdService.addCacheRepeat(new CmdRunnable("add", () -> common.add(), 0, 0), 1000)//
+		.addCacheRepeat(new CmdRunnable("get" , () -> common.getValue(), 0, 0), 1000)
+		.startJoin();
 		log.info("value:{}", common.getValue());
 
 		assertThat(common.getValue()).isEqualTo(1000);

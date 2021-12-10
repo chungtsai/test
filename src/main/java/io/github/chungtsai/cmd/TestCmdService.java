@@ -19,12 +19,22 @@ public class TestCmdService {
 
 	private List<CmdRunnable> cmdRunnables = new ArrayList<TestCmdService.CmdRunnable>();
 
+	private volatile static int INDEX = 1;
+
 	public static TestCmdService create() {
 		return new TestCmdService();
 	}
 
-	public void addCache(CmdRunnable cmd) {
+	public TestCmdService addCache(CmdRunnable cmd) {
 		cmdRunnables.add(cmd);
+		return this;
+	}
+
+	public TestCmdService addCacheRepeat(CmdRunnable cmd, int repeatCount) {
+		for (int i = 0; i < repeatCount; i++) {
+			cmdRunnables.add(cmd);
+		}
+		return this;
 	}
 
 	public void run(CmdRunnable cmd) {
@@ -70,7 +80,7 @@ public class TestCmdService {
 				cmdRunnable.runnable.run();
 			}
 		};
-		Thread thread = new Thread(warp, cmdRunnable.cmd);
+		Thread thread = new Thread(warp, cmdRunnable.cmd + "_" + INDEX++);
 		if (cmdRunnable.uncaughtExceptionHandler != null) {
 			thread.setUncaughtExceptionHandler(cmdRunnable.uncaughtExceptionHandler);
 		}
