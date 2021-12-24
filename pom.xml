@@ -12,12 +12,13 @@
 	</parent>
 	<groupId>io.github.chungtsai</groupId>
 	<artifactId>test</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<packaging>jar</packaging>
 	<description>commons utils</description>
 	<url>https://github.com/chungtsai</url>
 	<properties>
+		<log4j2.version>2.17.0</log4j2.version>
 		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
