@@ -56,9 +56,13 @@ public class MockitObject {
 	public MockitObject() {
 		this.register(Integer.class, () -> new Random().nextInt());
 		this.register(int.class, () -> new Random().nextInt());
-		this.register(short.class, () -> new Random().nextInt());
+		
+		this.register(short.class, () -> new Random().nextInt(100));
+		this.register(Short.class, () -> new Random().nextInt(100));
+		
 		this.register(boolean.class, () -> new Random().nextBoolean());
 		this.register(Boolean.class, () -> new Random().nextBoolean());
+		
 		this.register(String.class, () -> new Random().nextInt() + "");
 
 		this.register(Double.class, () -> new Random().nextDouble());
@@ -68,6 +72,7 @@ public class MockitObject {
 
 		this.register(long.class, () -> new Random().nextLong());
 		this.register(Long.class, () -> new Random().nextLong());
+		
 		this.register(BigDecimal.class, () -> BigDecimal.valueOf(new Random().nextLong()));
 	}
 
