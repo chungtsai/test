@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -106,7 +107,9 @@ public class MockitObject {
 				}
 			}
 		}
-		consumer.accept(t);
+		if (consumer != null) {
+			consumer.accept(t);
+		}
 		return t;
 
 	}
@@ -117,11 +120,18 @@ public class MockitObject {
 		});
 	}
 
-	public <T> void randomList(List<T> list, Supplier<T> supplier) {
-		this.randomList(list, supplier, 1);
+	public <T> List<T> randomList(Supplier<T> supplier, Consumer<T> consumer, int appendSize) {
+		List<T> list = Lists.newArrayList();
+		this.randomList(list, supplier, consumer, appendSize);
+		return list;
 	}
 
-	public <T> void randomList(List<T> list, Supplier<T> supplier, Consumer<T> consumer, int appendSize) {
+	public <T> List<T> randomList(List<T> list, Supplier<T> supplier) {
+		this.randomList(list, supplier, 1);
+		return list;
+	}
+
+	public <T> List<T> randomList(List<T> list, Supplier<T> supplier, Consumer<T> consumer, int appendSize) {
 		if (appendSize <= 0) {
 			throw new TestBusinessException("size is bigger than 0");
 		}
@@ -129,12 +139,10 @@ public class MockitObject {
 			T object = supplier.get();
 			list.add(this.random(object, consumer));
 		}
+		return list;
 	}
 
-	public <T> void randomList(List<T> list, Supplier<T> supplier, int size) {
-		T object = supplier.get();
-		list.add(this.random(object, t1 -> {
-			//
-		}));
+	public <T> List<T> randomList(List<T> list, Supplier<T> supplier, int size) {
+		return this.randomList(list, supplier, null, size);
 	}
 }
