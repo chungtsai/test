@@ -4,10 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,7 +18,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import io.github.chungtsai.TestBusinessException;
-
 
 /**
  * 產生隨機資料
@@ -56,13 +58,13 @@ public class MockitObject {
 	public MockitObject() {
 		this.register(Integer.class, () -> new Random().nextInt());
 		this.register(int.class, () -> new Random().nextInt());
-		
-		this.register(short.class, () -> new Random().nextInt(100));
-		this.register(Short.class, () -> new Random().nextInt(100));
-		
+
+		this.register(short.class, () -> (short) new Random().nextInt(Short.MAX_VALUE));
+		this.register(Short.class, () -> (short) new Random().nextInt(Short.MAX_VALUE));
+
 		this.register(boolean.class, () -> new Random().nextBoolean());
 		this.register(Boolean.class, () -> new Random().nextBoolean());
-		
+
 		this.register(String.class, () -> new Random().nextInt() + "");
 
 		this.register(Double.class, () -> new Random().nextDouble());
@@ -72,15 +74,13 @@ public class MockitObject {
 
 		this.register(long.class, () -> new Random().nextLong());
 		this.register(Long.class, () -> new Random().nextLong());
-		
+
 		this.register(BigDecimal.class, () -> BigDecimal.valueOf(new Random().nextLong()));
 	}
 
-	public Object random(Object t) {
-
+	public <T> T random(T t, Consumer<T> consumer) {
 		Method[] methods = t.getClass().getMethods();
 		for (Method method : methods) {
-
 			boolean startsWith = method.getName().startsWith("set");
 			if (startsWith) {
 				Parameter[] parameters = method.getParameters();
@@ -106,8 +106,35 @@ public class MockitObject {
 				}
 			}
 		}
+		consumer.accept(t);
 		return t;
 
 	}
 
+	public <T> T random(T t) {
+		return this.random(t, t1 -> {
+			//
+		});
+	}
+
+	public <T> void randomList(List<T> list, Supplier<T> supplier) {
+		this.randomList(list, supplier, 1);
+	}
+
+	public <T> void randomList(List<T> list, Supplier<T> supplier, Consumer<T> consumer, int appendSize) {
+		if (appendSize <= 0) {
+			throw new TestBusinessException("size is bigger than 0");
+		}
+		for (int i = 0; i < appendSize; i++) {
+			T object = supplier.get();
+			list.add(this.random(object, consumer));
+		}
+	}
+
+	public <T> void randomList(List<T> list, Supplier<T> supplier, int size) {
+		T object = supplier.get();
+		list.add(this.random(object, t1 -> {
+			//
+		}));
+	}
 }

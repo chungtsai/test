@@ -13,4 +13,6 @@ public class AppleVoDTO {
 	String name4;
 	BigDecimal one;
 	AppleVo appleVo;
+	short short1;
+	Short short2;
 }
